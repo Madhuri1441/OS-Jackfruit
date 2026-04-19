@@ -51,7 +51,7 @@
  * You may choose either a mutex or a spinlock, but your README must
  * justify the choice in terms of the code paths you implemented.
  * ============================================================== */
-
+static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, loff_t *offset);
 
 /* --- Provided: internal device / timer state --- */
 static struct timer_list monitor_timer;
@@ -203,6 +203,7 @@ static long monitor_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 static struct file_operations fops = {
     .owner = THIS_MODULE,
     .unlocked_ioctl = monitor_ioctl,
+    .write = dev_write,
 };
 
 /* --- Provided: Module Init --- */
@@ -263,6 +264,11 @@ static void __exit monitor_exit(void)
     printk(KERN_INFO "[container_monitor] Module unloaded.\n");
 }
 
+static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, loff_t *offset)
+{
+    printk(KERN_INFO "container_monitor: write called\n");
+    return len;
+}
 module_init(monitor_init);
 module_exit(monitor_exit);
 
