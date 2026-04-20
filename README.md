@@ -1,6 +1,6 @@
 # OS-Jackfruit: Multi-Container Runtime
 
-## 👩‍💻 Team Information
+## Team Information
 
 * Name: Madhuri Ravi
         Manasvi GV
@@ -8,13 +8,13 @@
 
 ---
 
-## 📌 Project Summary
+## Project Summary
 
 This project implements a lightweight container runtime in C that can run and manage multiple containers simultaneously. Each container is isolated using a separate root filesystem and executes workloads independently. The system also integrates a kernel module to monitor container activity.
 
 ---
 
-## ⚙️ Features Implemented
+## Features Implemented
 
 * Multi-container execution (run multiple containers concurrently)
 * Container lifecycle management (start, stop, list)
@@ -25,7 +25,7 @@ This project implements a lightweight container runtime in C that can run and ma
 
 ---
 
-## 🛠️ Build Instructions
+## Build Instructions
 
 ```bash
 cd boilerplate
@@ -35,7 +35,7 @@ make
 
 ---
 
-## 🔌 Load Kernel Module
+## Load Kernel Module
 
 ```bash
 sudo insmod monitor.ko
@@ -44,7 +44,7 @@ ls -l /dev/container_monitor
 
 ---
 
-## 📁 Setup Root Filesystem
+## Setup Root Filesystem
 
 ```bash
 mkdir rootfs-base
@@ -73,7 +73,7 @@ sudo mount --bind /dev rootfs-beta/dev
 
 ---
 
-## 🚀 Running the System
+## Running the System
 
 ### Start Supervisor
 
@@ -93,7 +93,7 @@ sudo ./engine start beta ./rootfs-beta /cpu_hog
 
 ---
 
-## 📊 List Running Containers
+## List Running Containers
 
 ```bash
 sudo ./engine ps
@@ -101,7 +101,7 @@ sudo ./engine ps
 
 ---
 
-## 📄 View Logs
+## View Logs
 
 ```bash
 sudo ./engine logs alpha
@@ -109,7 +109,7 @@ sudo ./engine logs alpha
 
 ---
 
-## 🛑 Stop Containers
+## Stop Containers
 
 ```bash
 sudo ./engine stop alpha
@@ -118,7 +118,7 @@ sudo ./engine stop beta
 
 ---
 
-## 🧹 Cleanup
+## Cleanup
 
 Stop supervisor (Ctrl + C), then:
 
@@ -133,7 +133,7 @@ sudo rmmod monitor
 
 ---
 
-## 📸 Demo Screenshots
+## Demo Screenshots
 
 The following screenshots demonstrate the working system:
 
@@ -147,7 +147,7 @@ The following screenshots demonstrate the working system:
 
 ---
 
-## 🧠 Key Concepts Demonstrated
+## Key Concepts Demonstrated
 
 ### Process Isolation
 
@@ -167,13 +167,13 @@ A kernel module provides monitoring support via a device interface.
 
 ---
 
-## 🧪 Workload Used
+## Workload Used
 
 * `cpu_hog`: CPU-intensive program used to simulate container workload and generate logs.
 
 ---
 
-## 🏁 Conclusion
+## Conclusion
 
 This project demonstrates a simplified container runtime with multi-container support, logging, and kernel interaction. It provides a practical understanding of process isolation, system calls, and operating system internals.
 
