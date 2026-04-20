@@ -138,19 +138,33 @@ sudo rmmod monitor
 The following screenshots demonstrate the working system:
 
 1. Kernel module loaded (`/dev/container_monitor`)
+   
    ![Screenshot](1.png.png)
+   
 2. Supervisor running
+   
    ![Screenshot](2.png.png)
+   
 3. Starting multiple containers
+   
    ![Screenshot](3.png.png)
-4. Container metadata using `ps`
+   
+5. Container metadata using `ps`
+   
    ![Screenshot](4.png.png)
-5. Logging output (`cpu_hog`)
+   
+6. Logging output (`cpu_hog`)
+    
     ![Screenshot](5.png.png)
-6. Stopping containers
+   
+7. Stopping containers
+    
     ![Screenshot](6.png.png)
+    
     ![Screenshot](7.png.png)
-7. Clean teardown (no running processes)
+    
+8. Clean teardown (no running processes)
+    
     ![Screenshot](8.png.png)
 
 ---
