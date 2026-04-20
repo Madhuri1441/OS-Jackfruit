@@ -3,6 +3,7 @@
 ## 👩‍💻 Team Information
 
 * Name: Madhuri Ravi
+*       Manasvi GV
 * Course: Operating Systems Project
 
 ---
