@@ -20,6 +20,7 @@ int container_exists(char *id) {
             return 1;
         }
     }
+
     fclose(f);
     return 0;
 }
@@ -33,7 +34,7 @@ void save_container(char *id, int pid, char *status) {
     }
 }
 
-// ================== RUN / START ==================
+// ================== CREATE CONTAINER ==================
 void create_container(char *id, char *rootfs, char *command, int background) {
 
     if (container_exists(id)) {
@@ -46,19 +47,26 @@ void create_container(char *id, char *rootfs, char *command, int background) {
     if (pid == 0) {
         // CHILD
 
-        chroot(rootfs);
+        if (chroot(rootfs) != 0) {
+            perror("chroot failed");
+            exit(1);
+        }
+
         chdir("/");
 
-        // LOG FILE
-        char logname[100];
-        sprintf(logname, "%s.log", id);
+        // ✅ ONLY redirect for background containers
+        if (background) {
+            char logname[100];
+            sprintf(logname, "%s.log", id);
 
-        int fd = open(logname, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+            int fd = open(logname, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 
-        dup2(fd, STDOUT_FILENO);
-        dup2(fd, STDERR_FILENO);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+        }
 
         execl("/bin/sh", "sh", "-c", command, NULL);
+
         perror("exec failed");
         exit(1);
     }
@@ -70,6 +78,10 @@ void create_container(char *id, char *rootfs, char *command, int background) {
         if (!background) {
             waitpid(pid, NULL, 0);
         }
+    }
+
+    else {
+        perror("fork failed");
     }
 }
 
@@ -102,6 +114,11 @@ void stop_container(char *id) {
     char cid[50], status[20];
     int pid, found = 0;
 
+    if (!f || !temp) {
+        printf("File error\n");
+        return;
+    }
+
     while (fscanf(f, "%s %d %s", cid, &pid, status) != EOF) {
         if (strcmp(cid, id) == 0 && strcmp(status, "running") == 0) {
             kill(pid, SIGKILL);
@@ -119,7 +136,9 @@ void stop_container(char *id) {
     remove("containers.txt");
     rename("temp.txt", "containers.txt");
 
-    if (!found) printf("Container not found\n");
+    if (!found) {
+        printf("Container not found\n");
+    }
 }
 
 // ================== LOGS ==================
@@ -133,7 +152,7 @@ void show_logs(char *id) {
         return;
     }
 
-    char line[200];
+    char line[256];
     while (fgets(line, sizeof(line), f)) {
         printf("%s", line);
     }
@@ -150,10 +169,18 @@ int main(int argc, char *argv[]) {
     }
 
     if (strcmp(argv[1], "run") == 0) {
+        if (argc < 5) {
+            printf("Usage: ./engine run <id> <rootfs> <command>\n");
+            return 1;
+        }
         create_container(argv[2], argv[3], argv[4], 0);
     }
 
     else if (strcmp(argv[1], "start") == 0) {
+        if (argc < 5) {
+            printf("Usage: ./engine start <id> <rootfs> <command>\n");
+            return 1;
+        }
         create_container(argv[2], argv[3], argv[4], 1);
     }
 
@@ -162,10 +189,18 @@ int main(int argc, char *argv[]) {
     }
 
     else if (strcmp(argv[1], "stop") == 0) {
+        if (argc < 3) {
+            printf("Usage: ./engine stop <id>\n");
+            return 1;
+        }
         stop_container(argv[2]);
     }
 
     else if (strcmp(argv[1], "logs") == 0) {
+        if (argc < 3) {
+            printf("Usage: ./engine logs <id>\n");
+            return 1;
+        }
         show_logs(argv[2]);
     }
 
